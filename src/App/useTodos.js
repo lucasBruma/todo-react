@@ -1,8 +1,8 @@
+// This script does almost everything that the app does.
 import React from 'react';
 import { useLocalStorage } from './useLocalStorage';
-const TodoContext = React.createContext(); // Objeto contexto que tiene dos componentes, provider y consumer
 
-function TodoProvider(props) {
+function useTodos() { // custom hook
     //states
   const {
     item: todos,
@@ -37,7 +37,7 @@ function TodoProvider(props) {
   }
   
     return (
-        <TodoContext.Provider value={{
+          {
             loading,
             error,
             completedTodos,
@@ -51,10 +51,8 @@ function TodoProvider(props) {
             openModal,
             setOpenModal,
             addTodo
-        }}>
-            {props.children}
-        </TodoContext.Provider>
+          }
     );
 }
 
-export {TodoContext, TodoProvider};
+export {useTodos};
