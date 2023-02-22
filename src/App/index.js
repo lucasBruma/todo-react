@@ -8,8 +8,12 @@ import {TodoItem} from "../TodoItem"
 import {CreateTodoButton} from "../CreateTodoButton"
 import { Modal } from "../Modal"
 import {TodoForm} from "../TodoForm"
-import {Loading} from "../Loading"
 import { TodoHeader } from '../TodoHeader';
+import { TodosError } from "../TodosError";
+import {Loading} from "../Loading"
+import {SearchFailed} from "../SearchFailed";
+import {EmptyTodos} from "../EmptyTodos";
+import { ChangeAlert } from "../ChangeAlert";
 
 
 function App() {
@@ -26,38 +30,55 @@ function App() {
     searchValue,
     setSearchValue,
     addTodo,
-    todos
+    todos,
+    sincronizeTodos
   } = useTodos();
 
   return (
     <React.Fragment>
-      <TodoHeader>
+      <TodoHeader loading={loading}>
         <TodoCounter
             completedTodos={completedTodos}
             totalTodos={totalTodos}
+            // loading={loading}
         />
         <TodoSearch
             searchValue={searchValue}
             setSearchValue={setSearchValue}
+            // loading={loading}
         />
       </TodoHeader>
 
-      <TodoList>
-        {error && <p>Hubo un error...</p>}
-        {loading && <Loading/>}
-        {(!loading && !searchedTodos.length && todos.length) && <p>No se encontraron resultados</p>}
-        {(!loading && !todos.length) && <p>Crea tu primer todo!</p>}
-    
-          {searchedTodos.map(todo=>(
-            <TodoItem 
-              key={todo.text} 
-              text={todo.text}
-              completed={todo.completed}
-              todos={searchedTodos}
-              saveTodos={saveTodos}
-              />
+      <TodoList 
+        error={error}
+        loading={loading}
+        searchedTodos={searchedTodos}
+        todos={todos}
+        onError = {() => <TodosError/>}
+        onLoading = {() => <Loading/>}
+        onEmptyTodos = {() => <EmptyTodos/>}
+        onEmptySearchTodos = {() => <SearchFailed searchValue={searchValue}/>}
+        // render = {todo=>(
+        //   <TodoItem 
+        //     key={todo.text} 
+        //     text={todo.text}
+        //     completed={todo.completed}
+        //     todos={searchedTodos}
+        //     saveTodos={saveTodos}
+        //     />
+        // ) 
+        // }
+      >       
+        {todo=>(
+          <TodoItem 
+            key={todo.text} 
+            text={todo.text}
+            completed={todo.completed}
+            todos={searchedTodos}
+            saveTodos={saveTodos}
+            />
           ) 
-          )}
+        }
       </TodoList>
 
       {openModal && (
@@ -75,6 +96,8 @@ function App() {
         setOpenModal={setOpenModal}
         openModal={openModal}
       />
+
+      <ChangeAlert sincronize={sincronizeTodos}/>
 
     </React.Fragment>
 );

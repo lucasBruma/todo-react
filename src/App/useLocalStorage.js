@@ -2,7 +2,8 @@ import React from "react";
 
 
 //CUSTOM HOOK (podemos llamar a otros react hooks dentro)
-function useLocalStorage(itemName,initialValue){  
+function useLocalStorage(itemName,initialValue){ 
+    const [sincronizedItem, setSincronizedItem] = React.useState(true);
     const [error, setError] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
     const [item, setItem] = React.useState(initialValue);
@@ -24,12 +25,13 @@ function useLocalStorage(itemName,initialValue){
           setItem(parsedItem);
           setLoading(false) //una vez todo cargado ya no va a estar más cargando je
           // al cambiar el estado aca, se modifica en todas partes. I mean, en AppUI no entrará al condicional.
+          setSincronizedItem(true)
         } catch(error){
           setError(error)
         }
           
-      }, 1000);
-    },[]);
+      }, 3000);
+    },[sincronizedItem]);
   
   
     const saveItem = (newItem) => {
@@ -42,12 +44,17 @@ function useLocalStorage(itemName,initialValue){
       }
     };
   
+    const sincronizeItem = () =>{
+      setLoading(true);
+      setSincronizedItem(false)
+    }
   
     return {
       item,
       saveItem,
       loading,
-      error
+      error,
+      sincronizeItem
     };
   }
 

@@ -11,3 +11,24 @@
 .search::placeholder{
     color: white;
 }
+
+/* .search:disabled{
+    opacity: 25%;
+} */
+
+.search:disabled {
+    animation: fade 1.5s infinite;
+}
+
+/* infinite fade animation */
+    @keyframes fade {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
